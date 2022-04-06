@@ -1,12 +1,13 @@
 import { TextComponentProps } from "./defaultProps";
 export interface PropToForm {
   component: string;
-  value?: string;
   subComponent?: string;
   extraProps?: { [key: string]: any };
   text?: string;
   options?: { text: string; value: any }[];
   initialTransform?: (v: any) => any;
+  valueProp?: string;
+  eventName?: string;
 }
 
 export type PropsToForms = {
