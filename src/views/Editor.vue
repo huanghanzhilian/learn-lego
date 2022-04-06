@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive } from "vue";
+import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store/index";
 import { ComponentData } from "../store/editor";
@@ -46,7 +46,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>();
-    const coms = reactive(store.state.editor.components);
+    const coms = computed(() => store.state.editor.components);
     const currentElement = computed<ComponentData | null>(() => store.getters.getCurrentElement);
     const addItem = (props: any) => {
       store.commit("addComponent", props);
@@ -55,7 +55,7 @@ export default defineComponent({
       store.commit("setActive", id);
     };
     const handleChange = (e: any) => {
-      console.log("event", e);
+      store.commit("updateComponent", e);
     };
     return {
       coms,

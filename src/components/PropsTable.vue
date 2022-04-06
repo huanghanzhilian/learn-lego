@@ -5,7 +5,9 @@
       <div class="prop-component">
         <component :is="value.component" v-if="value" :[value.valueProp]="value.value" v-bind="value.extraProps" v-on="value.events">
           <template v-if="value.options">
-            <component :is="value.subComponent" v-for="(option, key) in value.options" :key="key" :value="option.value">{{ option.text }}</component>
+            <component :is="value.subComponent" v-for="(option, key) in value.options" :key="key" :value="option.value">
+              <render-vnode :vNode="option.text"></render-vnode>
+            </component>
           </template>
         </component>
       </div>
@@ -14,17 +16,18 @@
 </template>
 
 <script lang="ts">
-import { computed, PropType, defineComponent } from "vue";
+import { computed, PropType, defineComponent, VNode } from "vue";
 import { reduce } from "lodash";
 import { mapPropsToForms } from "../propsMap";
 import { TextComponentProps } from "../defaultProps";
+import RenderVnode from "./RenderVnode";
 interface FormProps {
   component: string;
   subComponent?: string;
   value: string;
   extraProps?: { [key: string]: any };
   text?: string;
-  options?: { text: string; value: any }[];
+  options?: { text: string | VNode; value: any }[];
   valueProp: string;
   eventName: string;
   events: { [key: string]: (e: any) => void };
@@ -36,6 +39,9 @@ export default defineComponent({
       type: Object as PropType<TextComponentProps>,
       required: true
     }
+  },
+  components: {
+    RenderVnode
   },
   emits: ["change"],
   setup(props, context) {
