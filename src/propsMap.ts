@@ -6,6 +6,7 @@ export interface PropToForm {
   text?: string;
   options?: { text: string; value: any }[];
   initialTransform?: (v: any) => any;
+  afterTransform?: (v: any) => any;
   valueProp?: string;
   eventName?: string;
 }
@@ -25,12 +26,14 @@ export const mapPropsToForms: PropsToForms = {
   text: {
     text: "文本",
     component: "a-textarea",
-    extraProps: { rows: 3 }
+    extraProps: { rows: 3 },
+    afterTransform: (e: any) => e.target.value
   },
   fontSize: {
     text: "字号",
     component: "a-input-number",
-    initialTransform: (v: string) => parseInt(v)
+    initialTransform: (v: string) => parseInt(v),
+    afterTransform: (e: number) => (e ? `${e}px` : "")
   },
   lineHeight: {
     text: "行高",
@@ -40,7 +43,8 @@ export const mapPropsToForms: PropsToForms = {
       max: 3,
       step: 0.1
     },
-    initialTransform: (v: string) => parseFloat(v)
+    initialTransform: (v: string) => parseFloat(v),
+    afterTransform: (e: number) => e.toString()
   },
   textAlign: {
     component: "a-radio-group",
@@ -50,7 +54,8 @@ export const mapPropsToForms: PropsToForms = {
       { value: "left", text: "左" },
       { value: "center", text: "中" },
       { value: "right", text: "右" }
-    ]
+    ],
+    afterTransform: (e: any) => e.target.value
   },
   fontFamily: {
     component: "a-select",
