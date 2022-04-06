@@ -2,7 +2,7 @@
   <div class="editor-container">
     <a-layout>
       <a-layout-sider width="300" style="background: yellow">
-        <div class="sidebar-container">组件列表</div>
+        <components-list :list="defaultTextTemplates" @on-item-click="addItem"></components-list>
       </a-layout-sider>
       <a-layout style="padding: 0 24px 24px">
         <a-layout-content class="preview-container">
@@ -21,20 +21,28 @@
 import { defineComponent, reactive } from "vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store/index";
+import { defaultTextTemplates } from "../defaultTemplates";
+import ComponentsList from "../components/ComponentsList.vue";
 import LText from "../components/LText.vue";
 
 export default defineComponent({
   name: "editor",
   components: {
     "l-text": LText,
+    "components-list": ComponentsList
   },
   setup() {
     const store = useStore<GlobalDataProps>();
     const coms = reactive(store.state.editor.components);
+    const addItem = (props: any) => {
+      store.commit("addComponent", props);
+    };
     return {
       coms,
+      defaultTextTemplates,
+      addItem
     };
-  },
+  }
 });
 </script>
 

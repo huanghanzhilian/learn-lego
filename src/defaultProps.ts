@@ -32,7 +32,7 @@ export const commonDefaultProps: CommonComponentProps = {
   url: "",
   // size
   height: "",
-  width: "373px",
+  width: "",
   paddingLeft: "0px",
   paddingRight: "0px",
   paddingTop: "0px",
@@ -49,7 +49,7 @@ export const commonDefaultProps: CommonComponentProps = {
   position: "absolute",
   left: "0",
   top: "0",
-  right: "0",
+  right: "0"
 };
 
 export interface TextComponentProps extends CommonComponentProps {
@@ -77,14 +77,14 @@ export const textDefaultProps: TextComponentProps = {
   textAlign: "left",
   color: "#000000",
   backgroundColor: "",
-  ...commonDefaultProps,
+  ...commonDefaultProps
 };
 export const textStylePropNames = without(Object.keys(textDefaultProps), "actionType", "text", "url");
-export const transformToComponentProps = (props: { [key: string]: any }) => {
-  return mapValues(props, (item) => {
+export const transformToComponentProps = <T extends { [key: string]: any }>(props: T) => {
+  return mapValues(props, item => {
     return {
       type: item.constructor,
-      default: item,
+      default: item
     };
   });
 };

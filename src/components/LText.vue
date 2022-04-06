@@ -1,31 +1,33 @@
 <template>
-  <component :is="tag" :style="styleProps" class="l-text-component">
+  <component :is="tag" :style="styleProps" class="l-text-component" @click="handleClick">
     {{ text }}
   </component>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
-import { pick } from "lodash-es";
+import { defineComponent } from "vue";
+// import { pick } from "lodash-es";
 import { transformToComponentProps, textDefaultProps, textStylePropNames } from "../defaultProps";
+import useComponentCommon from "../hooks/useComponentCommon";
 const defaultProps = transformToComponentProps(textDefaultProps);
 export default defineComponent({
   name: "l-text",
   props: {
     tag: {
       type: String,
-      default: "div",
+      default: "div"
     },
-    ...defaultProps,
+    ...defaultProps
   },
   setup(props) {
     // 重用 简化
     // 抽离 获得styleProps
-    const styleProps = reactive(pick(props, textStylePropNames));
+    const { styleProps, handleClick } = useComponentCommon(props, textStylePropNames);
     return {
       styleProps,
+      handleClick
     };
-  },
+  }
 });
 </script>
 
