@@ -7,7 +7,7 @@ export interface EditorProps {
   currentElement: string;
 }
 
-interface ComponentData {
+export interface ComponentData {
   // 元素属性
   props: { [key: string]: string };
   // id
@@ -17,9 +17,9 @@ interface ComponentData {
 }
 
 export const testComponents: ComponentData[] = [
-  { id: uuidv4(), name: "l-text", props: { text: "hello", fontSize: "20px", color: "red" } },
-  { id: uuidv4(), name: "l-text", props: { text: "hello2", fontSize: "15px", fontWeight: "bold" } },
-  { id: uuidv4(), name: "l-text", props: { text: "hello3", fontSize: "10px", actionType: "url", url: "https://www.baidu.com" } }
+  { id: uuidv4(), name: "l-text", props: { text: "hello", fontSize: "20px", color: "red", lineHeight: "1" } },
+  { id: uuidv4(), name: "l-text", props: { text: "hello2", fontSize: "15px", fontWeight: "bold", lineHeight: "2" } },
+  { id: uuidv4(), name: "l-text", props: { text: "hello3", fontSize: "10px" } }
 ];
 
 const editor: Module<EditorProps, GlobalDataProps> = {
@@ -35,6 +35,14 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         props
       };
       state.components.push(newComponent);
+    },
+    setActive(state, currentId: string) {
+      state.currentElement = currentId;
+    }
+  },
+  getters: {
+    getCurrentElement: state => {
+      return state.components.find(component => component.id === state.currentElement);
     }
   }
 };
