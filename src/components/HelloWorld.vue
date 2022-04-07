@@ -3,6 +3,12 @@
   <button @click="setCount">{{ count }}</button>
   <input type="text" v-model="todo">
   <button class="add-todo" @click="addTodo">add</button>
+
+  <button class="loadUser" @click="loadUser">load</button>
+  <p v-if="user.loading" class="loading">Loading</p>
+  <div v-else class="user-name">{{user.data && user.data.username}}</div>
+  <p v-if="user.error" class="error">error!</p>
+
   <ul>
     <li v-for="(todo, index) in todos" :key="index">{{todo}}</li>
   </ul>
@@ -10,7 +16,8 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import axios from 'axios'
+import { defineComponent, ref, reactive } from 'vue'
 import Hello from './Hello'
 
 export default defineComponent({
@@ -22,6 +29,7 @@ export default defineComponent({
     msg: String
   },
   emits: ['send'],
+
   setup(props, context) {
     console.log(props, context)
     const todo = ref('')
@@ -36,12 +44,30 @@ export default defineComponent({
         context.emit('send', todo.value)
       }
     }
+    const user = reactive({
+      data: null,
+      loading: false,
+      error: false
+    })
+    const loadUser = () => {
+      user.loading = true
+      axios.get(`https://jsonplaceholder.typicode.com/users/1`).then(resp => {
+        console.log(resp)
+        user.data = resp.data
+      }).catch(err => {
+        user.error = true
+      }).finally(() => {
+        user.loading = false
+      })
+    }
     return {
       count,
       todo,
       todos,
+      user,
       setCount,
-      addTodo
+      addTodo,
+      loadUser
     }
   }
 })

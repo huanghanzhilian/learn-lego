@@ -1,6 +1,11 @@
-import { shallowMount, mount } from '@vue/test-utils'
+import {shallowMount, mount, flushPromises} from '@vue/test-utils'
 import HelloWorld from '@/components/HelloWorld.vue'
 import Hello from '@/components/Hello.vue'
+
+import axios from 'axios'
+
+jest.mock('axios')
+const mockAxios = axios as jest.Mocked<typeof axios>
 
 describe('HelloWorld.vue', () => {
   it('renders props.msg when passed', () => {
@@ -39,6 +44,23 @@ describe('HelloWorld.vue', () => {
     const events = wrapper.emitted('send') || []
     expect(events[0]).toEqual([todoContent])
 
+  })
+
+  it.only('点击load按钮时，应该加载user message', async () => {
+    const msg = 'new message'
+    const todoContent = 'buy milk'
+    const wrapper = shallowMount(HelloWorld, {
+      props: { msg }
+    })
+    mockAxios.get.mockResolvedValueOnce({data: {username: 'hjp'}})
+    await wrapper.get('.loadUser').trigger('click')
+    expect(mockAxios.get).toHaveBeenCalled()
+    expect(wrapper.find('.loading').exists()).toBeTruthy()
+    await flushPromises()
+    // 界面更新完毕
+
+    expect(wrapper.find('.loading').exists()).toBeFalsy()
+    expect(wrapper.get('.user-name').text()).toBe('hjp')
   })
 
 })
