@@ -55,7 +55,6 @@ export default defineComponent({
       store.commit("addComponent", props);
     };
     const deleteCurElement = (id: string) => {
-      console.log("store", store);
       store.commit("deleteCurElement", id);
     };
     const setActive = (id: string) => {

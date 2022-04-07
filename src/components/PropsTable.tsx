@@ -43,10 +43,10 @@ export default defineComponent({
         const newKey = key as keyof TextComponentProps
         const item = mapPropsToForms[newKey]
         if (item) {
-          const { valueProp = 'value', eventName = 'change', initalTransform, afterTransform } = item
+          const { valueProp = 'value', eventName = 'change', initialTransform, afterTransform } = item
           const newItem: FormProps = {
             ...item,
-            value: initalTransform ? initalTransform(value) : value,
+            value: initialTransform ? initialTransform(value) : value,
             valueProp,
             eventName,
             events: {
