@@ -45,6 +45,12 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       if (updatedComponent) {
         updatedComponent.props[key as keyof TextComponentProps] = value;
       }
+    },
+    deleteCurElement(state, id) {
+      const index = state.components.findIndex(item => {
+        return item.id === id;
+      });
+      state.components.splice(index, 1);
     }
   },
   getters: {

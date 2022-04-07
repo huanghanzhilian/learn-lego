@@ -10,6 +10,7 @@
           <div class="preview-list" id="canvas-area">
             <edit-wrapper v-for="com in coms" :key="com.id" :id="com.id" @set-active="setActive" :active="com.id === (currentElement && currentElement.id)">
               <component :is="com.name" v-bind="com.props" />
+              <a-button type="default" v-if="com.id === (currentElement && currentElement.id)" @click="deleteCurElement(currentElement.id)">删除</a-button>
             </edit-wrapper>
           </div>
         </a-layout-content>
@@ -35,10 +36,12 @@ import ComponentsList from "../components/ComponentsList.vue";
 import EditWrapper from "../components/EditWrapper.vue";
 import PropsTable from "../components/PropsTable.vue";
 import LText from "../components/LText.vue";
+import { Button } from "ant-design-vue";
 
 export default defineComponent({
   name: "editor",
   components: {
+    "a-button": Button,
     "edit-wrapper": EditWrapper,
     "l-text": LText,
     "components-list": ComponentsList,
@@ -50,6 +53,10 @@ export default defineComponent({
     const currentElement = computed<ComponentData | null>(() => store.getters.getCurrentElement);
     const addItem = (props: any) => {
       store.commit("addComponent", props);
+    };
+    const deleteCurElement = (id: string) => {
+      console.log("store", store);
+      store.commit("deleteCurElement", id);
     };
     const setActive = (id: string) => {
       store.commit("setActive", id);
@@ -63,7 +70,8 @@ export default defineComponent({
       addItem,
       setActive,
       currentElement,
-      handleChange
+      handleChange,
+      deleteCurElement
     };
   }
 });
