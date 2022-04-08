@@ -10,7 +10,13 @@ jest.mock("ant-design-vue", () => ({
   }
 }));
 // jest.mock("vuex");
-jest.mock("vue-router");
+
+const mockedRoutes: string[] = []
+jest.mock("vue-router", () => ({
+  useRouter: () => ({
+    push: (url: string) => mockedRoutes.push(url)
+  })
+}));
 
 const mockComponent = {
   template: '<div><slot></slot></div>'
@@ -30,6 +36,7 @@ const globalComponents = {
 
 describe("UserProfile component", () => {
   beforeAll(async () => {
+    jest.useFakeTimers('legacy')
     wrapper = mount(UserProfile, {
       props: {
         user: {
@@ -64,6 +71,16 @@ describe("UserProfile component", () => {
     expect(wrapper.find('.user-profile-dropdown').exists()).toBeTruthy()
 
   });
-  afterAll(() => {});
+  it("执行退出和显示message，执行延时路由跳转", async() => {
+    await wrapper.get('.user-profile-dropdown div').trigger('click')
+    console.log(store.state.user.isLogin)
+    expect(store.state.user.isLogin).toBeFalsy()
+    expect(message.success).toHaveBeenCalledTimes(1)
+    jest.runAllTimers()
+    expect(mockedRoutes).toEqual(['/'])
+  });
+  afterEach(() => {
+    (message as jest.Mocked<typeof message>).success.mockReset()
+  });
 });
 
